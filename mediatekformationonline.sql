@@ -21,7 +21,7 @@ SET time_zone = "+00:00";
 -- Base de données : `mediatekformation`
 --
 
-USE `if0_38624841_mediatekformation`;
+USE `gehu1211_mediatekformation`;
 
 -- --------------------------------------------------------
 
