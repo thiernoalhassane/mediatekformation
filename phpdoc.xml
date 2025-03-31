@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpdocumentor>
+    <title>Documentation de mon projet Symfony</title>
+    <paths>
+        <output>docs</output>
+        <directories>
+            <directory>src</directory>
+        </directories>
+    </paths>
+    <versions>
+        <version number="1.0.0">
+            <description>Version initiale de la documentation</description>
+        </version>
+    </versions>
+</phpdocumentor>
