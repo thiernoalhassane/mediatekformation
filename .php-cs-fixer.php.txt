@@ -1,0 +1,11 @@
+<?php
+
+$finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__);  // Rechercher tous les fichiers dans le répertoire courant
+
+$config = new PhpCsFixer\Config();
+return $config->setRules([
+    '@PSR2' => true,  // Appliquer les règles PSR-2
+    'array_syntax' => ['syntax' => 'short'],  // Utiliser la syntaxe courte pour les tableaux
+])
+    ->setFinder($finder);

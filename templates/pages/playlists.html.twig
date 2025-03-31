@@ -1,0 +1,153 @@
+{% extends "basefront.html.twig" %}
+{% block body %}
+    <div class="modal fade" id="ajouterPlaylistModal" tabindex="-1" aria-labelledby="ajouterPlaylistModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ajouterPlaylistModalLabel">Ajouter une playlist</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ path('playlists.add') }}"> 
+                        <input type="hidden" name="_token" value="{{ csrf_token('ajouter_playlist') }}">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" class="form-control" name="description" required>
+                        </div>
+                                                
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <caption> Tableau des playlists avec leur catégories </caption>
+        <thead>
+            <tr>
+                <th class="text-left align-top" scope="col">
+                    Playlist  <br />
+                    <a href="{{ path('playlists.sort', {champ:'name', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true"><</a>
+                    <a href="{{ path('playlists.sort', {champ:'name', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">></a>
+                    <form class="form-inline mt-1" method="POST" action="{{ path('playlists.findallcontain', {champ:'name'}) }}">
+                        <div class="form-group mr-1 mb-2">
+                            <input type="text" class="sm" name="recherche" 
+                                   value="{% if valeur|default and not table|default %}{{ valeur }}{% endif %}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('filtre_name') }}">
+                            <button type="submit" class="btn btn-info mb-2 btn-sm">filtrer</button>
+                        </div>
+                    </form>  
+                            <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#ajouterPlaylistModal">Ajouter une playlist</button>
+                </th>
+                <th class="text-left align-top" scope="col">
+                    catégories
+                    <form class="form-inline mt-1" method="POST" action="{{ path('playlists.findallcontain', {champ:'id', table:'categories'}) }}">
+                        <select class="form-select form-select-sm" name="recherche" id="recherche" onchange="this.form.submit()">
+                            <option value=""></option>
+                            {% for categorie in categories %}
+                                <option 
+                                    {% if valeur|default and valeur==categorie.id %} 
+                                        selected
+                                    {% endif %} 
+                                    value="{{ categorie.id }}">{{ categorie.name }}
+                                </option>
+                            {% endfor %}
+                        </select>                    
+                    </form>            
+                </th>
+                <th class="text-center align-top" scope="col">
+                    Nombre de formation <br>
+                    <a href="{{ path('playlists.sort', {champ:'nbformations', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true"><</a>
+                    <a href="{{ path('playlists.sort', {champ:'nbformations', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">></a>
+                    
+                </th>    
+                <th class="text-center align-top" scope="col">
+                    &nbsp;
+                </th>		
+                
+            </tr>
+        </thead>
+        <tbody>
+            <!-- boucle sur les playlists -->
+            {% set ancplaylist = '' %}
+                {% for playlist in playlists %}
+                    <tr class="align-middle">
+                        <td>
+                            <h5 class="text-info">
+                                {{ playlist.name }}
+                            </h5>
+                        </td>                 
+                        <td class="text-left">
+                            {% set categories = playlist.categoriesplaylist %}
+                            {% if categories|length > 0  %}
+                                {% for categorie in categories %}
+                                    &nbsp;{{ categorie }}                                  
+                                {% endfor %}
+                            {% endif %}
+                        </td>            					
+                        <td class="text-center">
+                            {{ playlist.formations|length }}
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ path('playlists.showone', {id:playlist.id}) }}" class="btn btn-secondary">Voir détail</a>
+                            <button class="btn btn-warning btn-sm" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modifierPlaylistModal"
+                                onclick="fillEditModal('{{ playlist.id}}', '{{ playlist.name }}', '{{ playlist.description }}')">
+                            Modifier
+                        </button>
+
+                        <form method="POST" action="{{ path('playlists.delete') }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette playlist ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete') }}">
+                            <input type="hidden" name="id" value="{{  playlist.id }}">
+                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                        </form>
+                        </td> 					
+                    </tr>
+                {% endfor %}	
+            
+        </tbody>
+    </table>
+                
+                    <div class="modal fade" id="modifierPlaylistModal" tabindex="-1" aria-labelledby="modifierPlaylistModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier la playlist</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editFormationForm" method="POST" action="{{ path('playlists.edit') }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('edit_playlist') }}">
+                        <input type="hidden" id="editPlaylistId" name="id">
+
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" id="editName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <input type="text" class="form-control" id="editDescription" name="description" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script pour remplir le modal avec les valeurs existantes -->
+    <script>
+        function fillEditModal(id, title,  description) {
+            document.getElementById('editPlaylistId').value = id;
+            document.getElementById('editName').value = title;
+            document.getElementById('editDescription').value = description;
+        }
+    </script>
+{% endblock %}

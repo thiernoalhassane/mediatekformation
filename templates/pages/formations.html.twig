@@ -1,0 +1,256 @@
+{% extends "basefront.html.twig" %}
+{% block body %}
+
+    <!-- Modal pour Ajouter une Formation -->
+    <div class="modal fade" id="ajouterFormationModal" tabindex="-1" aria-labelledby="ajouterFormationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ajouterFormationModalLabel">Ajouter une formation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ path('formations.add') }}"> 
+                        <input type="hidden" name="_token" value="{{ csrf_token('ajouter_formation') }}">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Titre</label>
+                            <input type="text" class="form-control" name="title" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" class="form-control" name="description" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="playlist" class="form-label">playlist</label>
+
+
+                            <select class="form-select form-select-sm" name="playlist" >
+                                <option value=""></option>
+                                {% for playlist in playlists %}
+                                    <option 
+                                        {% if valeur|default and valeur==playlist.id %} 
+                                            selected
+                                        {% endif %} 
+                                        value="{{ playlist.id }}">{{ playlist.name }}
+                                    </option>
+                                {% endfor %}
+                            </select> 
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="video" class="form-label">Video</label>
+                            <input type="text" class="form-control" name="video_id" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="video" class="form-label">Les categories</label>
+
+                            {% for categorie in categories %}
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="categories[]" value="{{ categorie.id }}"
+                                               <label class="form-check-label">{{ categorie.name }}</label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+
+
+
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <caption>Tableau des formations avec leurs playlists et catégories</caption>
+        <thead>
+            <tr>
+                <th class="text-left align-top" scope="col">
+                    formation <br />
+                    <a href="{{ path('formations.sort', {champ:'title', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true"><</a>
+                    <a href="{{ path('formations.sort', {champ:'title', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">></a>
+                    <form class="form-inline mt-1" method="POST" action="{{ path('formations.findallcontain', {champ:'title'}) }}">
+                        <div class="form-group mr-1 mb-2">
+                            <input type="text" class="sm" name="recherche" 
+                                   value="{% if valeur|default and not table|default %}{{ valeur }}{% endif %}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('filtre_title') }}">
+                            <button type="submit" class="btn btn-info mb-2 btn-sm">filtrer</button>
+                        </div>
+                    </form>   
+                    <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#ajouterFormationModal">Ajouter une formation</button>
+                </th>
+                <th class="text-left align-top" scope="col">
+                    playlist<br />
+                    <a href="{{ path('formations.sort', {table:'playlist', champ:'name', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true"><</a>
+                    <a href="{{ path('formations.sort', {table:'playlist', champ:'name', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">></a>
+                    <form class="form-inline mt-1" method="POST" action="{{ path('formations.findallcontain', {champ:'name', table:'playlist'}) }}">
+                        <div class="form-group mr-1 mb-2">
+                            <input type="text" class="sm" name="recherche" 
+                                   value="{% if valeur|default and table|default and table=='playlist' %}{{ valeur }}{% endif %}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('filtre_name') }}">
+                            <button type="submit" class="btn btn-info mb-2 btn-sm">filtrer</button>
+                        </div>
+                    </form>                    
+                </th>
+                <th class="text-left align-top" scope="col">
+                    catégories
+                    <form class="form-inline mt-1" method="POST" action="{{ path('formations.findallcontain', {champ:'id', table:'categories'}) }}">
+                        <select class="form-select form-select-sm" name="recherche" id="recherche" onchange="this.form.submit()">
+                            <option value=""></option>
+                            {% for categorie in categories %}
+                                <option 
+                                    {% if valeur|default and valeur==categorie.id %} 
+                                        selected
+                                    {% endif %} 
+                                    value="{{ categorie.id }}">{{ categorie.name }}
+                                </option>
+                            {% endfor %}
+                        </select>                    
+                    </form>            
+                </th>
+                <th class="text-center align-top" scope="col">
+                    date<br />
+                    <a href="{{ path('formations.sort', {champ:'publishedAt', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true"><</a>
+                    <a href="{{ path('formations.sort', {champ:'publishedAt', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">></a>                    
+                </th>
+                <th class="text-center align-top" scope="col">
+                    &nbsp;
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for formation in formations %}
+                <tr class="align-middle">
+                    <td>
+                        <h5 class="text-info">
+                            {{ formation.title }}
+                        </h5>
+                    </td>
+                    <td class="text-left">
+                        {{ formation.playlist.name }}                  
+                    </td>                    
+                    <td class="text-left">
+                        {% for categorie in formation.categories %}
+                            {{ categorie.name }}<br />
+                        {% endfor %}
+                    </td>                    
+                    <td class="text-left">
+                        {{ formation.publishedatstring }}
+                    </td>
+                    <td class="text-left">
+                        {% if formation.miniature %}
+                            <a href="{{ path('formations.showone', {id:formation.id}) }}">
+                                <img src="{{ formation.miniature }}"
+                                     alt="Miniature de la formation {{ formation.title }}">
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-warning btn-sm" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modifierFormationModal"
+                                onclick="fillEditModal(
+                                            '{{ formation.id }}', 
+                                            '{{ formation.title|e('js') }}', 
+                                            '{{ formation.playlist.id|e('js') }}', 
+                                            '{{ formation.description|e('js') }}', 
+                                            '{{ formation.videoId|e('js') }}' ,
+                                            '{{ formation.categories|map(c => c.id)|json_encode|raw }}'
+                                    )">
+                            Modifier
+                        </button>
+
+                        <form method="POST" action="{{ path('formations.delete') }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette formation ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ formation.id) }}">
+                            <input type="hidden" name="id" value="{{ formation.id }}">
+                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                        </form>
+                    </td>
+
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="modal fade" id="modifierFormationModal" tabindex="-1" aria-labelledby="modifierFormationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier la formation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editFormationForm" method="POST" action="{{ path('formations.edit') }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('edit_formation') }}">
+                        <input type="hidden" id="editFormationId" name="id">
+
+                        <div class="mb-3">
+                            <label class="form-label">Titre</label>
+                            <input type="text" class="form-control" id="editTitle" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <input type="text" class="form-control" id="editDescription" name="description" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Playlist</label>
+                            <select class="form-select form-select-sm" id="editPlaylist" name="playlist">
+                                {% for playlist in playlists %}
+                                <option value="{{ playlist.id }}">{{ playlist.name }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                            
+                        <div class="mb-3">
+                            <label class="form-label">Video</label>
+                            <input type="text" class="form-control" id="editVideo" name="video_id" required>
+                        </div>
+                        
+                          <div class="mb-3">
+                        <label for="categories" class="form-label">Les catégories</label>
+                        <div class="row">
+                            {% for categorie in categories %}
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="cat{{ categorie.id }}" name="categories[]" value="{{ categorie.id }}">
+                                        <label class="form-check-label" for="cat{{ categorie.id }}">{{ categorie.name }}</label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script pour remplir le modal avec les valeurs existantes -->
+    <script>
+        function fillEditModal(id, title, playlist, description, video , categories) {
+            document.getElementById('editFormationId').value = id;
+            document.getElementById('editTitle').value = title;
+            document.getElementById('editVideo').value = video;
+            document.getElementById('editDescription').value = description;
+            let selectElement = document.getElementById('editPlaylist');
+            for (let option of selectElement.options) {
+                if (option.value == playlistId) {
+                    option.selected = true;
+                }
+            }
+            
+            document.querySelectorAll("input[name='categories[]']").forEach(checkbox => {
+        if (categories.includes(parseInt(checkbox.value))) {
+            checkbox.checked = true;
+        } else {
+            checkbox.checked = false;
+        }
+    });
+        }
+    </script>
+{% endblock %}

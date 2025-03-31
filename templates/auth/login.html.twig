@@ -1,0 +1,64 @@
+{# templates/auth/login.html.twig #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <!-- Utilisation de Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .card {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #a777e3;
+        }
+        .btn-primary {
+            background-color: #a777e3;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #8c5bd1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card p-4">
+                    <div class="card-body">
+                        <h3 class="card-title mb-4 text-center">Se connecter</h3>
+                        <form action="{{ path('login_check') }}" method="post">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Nom d'utilisateur</label>
+                                <input type="text" id="username" name="_username" class="form-control" placeholder="Votre email ou pseudo" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Mot de passe</label>
+                                <input type="password" id="password" name="_password" class="form-control" placeholder="Votre mot de passe" required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Se connecter</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 Bundle avec Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

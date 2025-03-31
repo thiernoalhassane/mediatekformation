@@ -1,0 +1,111 @@
+{% extends "basefront.html.twig" %}
+{% block body %}
+    <div class="modal fade" id="ajouterCategorieModal" tabindex="-1" aria-labelledby="ajouterCategorieModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ajouterCategorieModalLabel">Ajouter une categorie</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ path('categories.add') }}"> 
+                        <input type="hidden" name="_token" value="{{ csrf_token('ajouter_categorie') }}">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>                                                
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <caption> Tableau des  catégories </caption>
+        <thead>
+            <tr>
+                <th class="text-left align-top" scope="col">
+                    Categorie  <br />
+                    <a href="{{ path('categories.sort', {champ:'name', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true"><</a>
+                    <a href="{{ path('categories.sort', {champ:'name', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">></a>
+                    <form class="form-inline mt-1" method="POST" action="{{ path('categories.findallcontain', {champ:'name'}) }}">
+                        <div class="form-group mr-1 mb-2">
+                            <input type="text" class="sm" name="recherche" 
+                                   value="{% if valeur|default and not table|default %}{{ valeur }}{% endif %}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('filtre_name') }}">
+                            <button type="submit" class="btn btn-info mb-2 btn-sm">filtrer</button>
+                        </div>
+                    </form>    
+                            
+                            <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#ajouterCategorieModal">Ajouter une categorie</button>
+                </th>
+
+
+                <th class="text-center align-top" scope="col">
+                    &nbsp;
+                </th>				
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for categorie in categories %}
+                <tr class="align-middle">
+                    <td>
+                        <h5 class="text-info">
+                            {{ categorie.name }}
+                        </h5>
+                    </td>                 
+
+                    <td class="text-center">
+                        <button class="btn btn-warning btn-sm" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modifierCategorieModal"
+                                onclick="fillEditModal('{{ categorie.id }}','{{ categorie.name }}')">
+                            Modifier
+                        </button>
+
+                        <form method="POST" action="{{ path('categories.delete') }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette categorie ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete') }}">
+                            <input type="hidden" name="id" value="{{  categorie.id }}">
+                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                        </form>
+                    </td> 					
+                </tr>
+            {% endfor %}	
+
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="modifierCategorieModal" tabindex="-1" aria-labelledby="modifierCategorieModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier la categorie</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editCategorieForm" method="POST" action="{{ path('categories.edit') }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('edit_categorie') }}">
+                        <input type="hidden" id="editCategorieId" name="id">
+
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" id="editName" name="name" required>
+                        </div>
+                       
+
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script pour remplir le modal avec les valeurs existantes -->
+    <script>
+        function fillEditModal(id, name) {
+            document.getElementById('editCategorieId').value = id;
+            document.getElementById('editName').value = name;
+        }
+    </script>
+{% endblock %}

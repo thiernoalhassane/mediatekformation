@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/laragon/www/mediatekformation/src/Repository/FormationRepository.php</file>
+            <file>file:/C:/laragon/www/mediatekformation/src/Controller/CategorieController.php</file>
+            <file>file:/C:/laragon/www/mediatekformation/templates/pages/formations.html.twig</file>
+            <file>file:/C:/laragon/www/mediatekformation/src/Controller/PlaylistsController.php</file>
+            <file>file:/C:/laragon/www/mediatekformation/tests/Fonctionel/RouteTest.php</file>
+            <file>file:/C:/laragon/www/mediatekformation/tests/Repository/PlaylistRepositoryTest.php</file>
+            <file>file:/C:/laragon/www/mediatekformation/vendor/phpunit/phpunit/phpunit</file>
+            <file>file:/C:/laragon/www/mediatekformation/tests/Repository/FormationRepositoryTest.php</file>
+            <file>file:/C:/laragon/www/mediatekformation/vendor/doctrine/doctrine-bundle/src/Repository/ServiceEntityRepositoryProxy.php</file>
+            <file>file:/C:/laragon/www/mediatekformation/src/Controller/AccueilController.php</file>
+            <file>file:/C:/laragon/www/mediatekformation/src/Controller/FormationsController.php</file>
+            <file>file:/C:/laragon/www/mediatekformation/vendor/phpunit/phpunit/phpunit.xsd</file>
+            <file>file:/C:/laragon/www/mediatekformation/src/Repository/PlaylistRepository.php</file>
+        </group>
+    </open-files>
+</project-private>
