@@ -1,4 +1,4 @@
-name: Déploiement Symfony
+name: 🚀 Déploiement Symfony sur O2switch
 
 on:
   push:
@@ -10,10 +10,71 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: 📂 Vérifier le dépôt
+      uses: actions/checkout@v4
+
+    - name: 🔑 Charger la clé SSH
+      run: |
+        echo "-----BEGIN OPENSSH PRIVATE KEY-----
+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
+-----END OPENSSH PRIVATE KEY-----" > private_key
+        chmod 600 private_key
+
     - name: 🚀 Déploiement sur O2switch
       uses: appleboy/ssh-action@v0.1.10
       with:
         host: "epinoche.o2switch.net"
         username: "gehu1211"
-        key: ${{ secrets.O2SWITCH_SSH_KEY }}
-        script: "~/www/mediatekformation/deploy.sh"
+        key: "$(cat private_key)"
+        port: 22
+        script: |
+          echo "✅ Connexion SSH réussie !"
+          ls -la ~/www/mediatekformation
+          bash ~/www/mediatekformation/deploy.sh
