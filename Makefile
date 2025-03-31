@@ -11,3 +11,4 @@ install: vendor/autoload.php
 
 vendor/autoload.php: composer.lock composer.json
 	composer install --no-dev --optimize-autoloader
+	touch vendor/autoload.php
