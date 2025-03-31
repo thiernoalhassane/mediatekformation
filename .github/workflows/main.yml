@@ -14,6 +14,6 @@ jobs:
       uses: appleboy/ssh-action@v0.1.10
       with:
         host: "ton-domaine.com"
-        username: "ton-utilisateur-ssh"
+        username: "Barry"
         key: ${{ secrets.O2SWITCH_SSH_KEY }}
         script: "~/www/mediatekformation/deploy.sh"
