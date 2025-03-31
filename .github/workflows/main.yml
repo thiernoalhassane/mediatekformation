@@ -15,5 +15,5 @@ jobs:
       with:
         host: "ton-domaine.com"
         username: "ton-utilisateur-ssh"
-        key: ${{ secrets.O2SWITCH_SSH_KEY }}
-        script: "~/www/ton-projet/deploy.sh"
+        key: ${{ digitalexpertize }}
+        script: "~/www/mediatekformation/deploy.sh"
