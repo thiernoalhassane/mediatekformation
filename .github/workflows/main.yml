@@ -13,7 +13,7 @@ jobs:
     - name: 🚀 Déploiement sur O2switch
       uses: appleboy/ssh-action@v0.1.10
       with:
-        host: "ton-domaine.com"
-        username: "Barry"
+        host: "epinoche.o2switch.net"
+        username: "gehu1211"
         key: "digitalexpertize"
         script: "~/www/mediatekformation/deploy.sh"
