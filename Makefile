@@ -4,7 +4,7 @@ domain := "mediatekformation"
 .PHONY: install deploy
 
 deploy:
-	ssh gehu1211@epinoche.o2switch.net 'cd www/mediatekformation && git pull origin main'
+	ssh gehu1211@epinoche.o2switch.net 'cd www/mediatekformation && git pull origin main && make install'
 
 install: vendor/autoload.php   
    php bin/console cache:clear
