@@ -1,0 +1,19 @@
+name: Déploiement Symfony
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 🚀 Déploiement sur O2switch
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: "ton-domaine.com"
+        username: "ton-utilisateur-ssh"
+        key: ${{ secrets.O2SWITCH_SSH_KEY }}
+        script: "~/www/ton-projet/deploy.sh"
