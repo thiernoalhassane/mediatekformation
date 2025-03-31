@@ -15,5 +15,5 @@ jobs:
       with:
         host: "epinoche.o2switch.net"
         username: "gehu1211"
-        key: "digitalexpertize"
+        key: ${{ secrets.O2SWITCH_SSH_KEY }}
         script: "~/www/mediatekformation/deploy.sh"
