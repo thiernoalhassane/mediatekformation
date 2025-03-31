@@ -24,6 +24,7 @@ jobs:
         host: "epinoche.o2switch.net"  # Remplace par ton domaine O2switch
         username: "gehu1211"  # Ton identifiant SSH
         key: ${{ secrets.O2SWITCH_SSH_KEY }}
+        passphrase: ${{ secrets.O2SWITCH_SSH_PASSPHRASE }}
         port: 22
         script: |
           echo "✅ Connexion SSH réussie !"
