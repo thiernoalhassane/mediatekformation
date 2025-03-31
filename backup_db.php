@@ -13,10 +13,10 @@ if (!file_exists($backupDir)) {
 
 // Nom du fichier avec la date
 $date = date("Y-m-d");
-$backupFile = "{$backupDir}backup_{$dbName}_{$date}.sql.gz";
+$backupFile = "/home/gehu1211/public_html/mediatekformation/backups/backup_{$dbName}_{$date}.sql";
 
 // Commande mysqldump avec compression gzip
-$dumpCommand = "mysqldump -h $dbHost -u $dbUser -p'$dbPass' $dbName | gzip > $backupFile";
+$dumpCommand = "mysqldump -h $dbHost -u $dbUser -p'$dbPass' $dbName  > $backupFile";
 exec($dumpCommand, $output, $returnVar);
 
 if ($returnVar === 0) {
